@@ -18,18 +18,18 @@ const server = http.createServer((req, res) => {
   } else if (req.url === '/contact') {
     filePath = path.join(__dirname, 'contact-me.html');
   } else {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('404 Not Found');
-    return;
+    filePath = path.join(__dirname, '404.html');
   }
 
-  fs.readFile(filePath, (err, data) => {
+  fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
       res.writeHead(500, { 'Content-Type': 'text/plain' });
       res.end('500 Server Error');
       return;
     }
-    res.writeHead(200, { 'Content-Type': 'text/html' });
+
+    const statusCode = filePath.includes('404.html') ? 404 : 200;
+    res.writeHead(statusCode, { 'Content-Type': 'text/html' });
     res.end(data);
   });
 });
